@@ -2,7 +2,7 @@ from sqlalchemy import ForeignKey, create_engine, insert
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import String, Integer, MetaData, Table
 from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import Mapped, sessionmaker, Session
+from sqlalchemy.orm import Mapped, Session
 from sqlalchemy.orm import mapped_column
 from config import get_settings
 from my_exeptions import UncorrectForeignKeyExeptions

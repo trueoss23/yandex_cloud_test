@@ -2,16 +2,16 @@ import boto3
 from config import get_settings
 from helpers import resize_image
 
-settings = get_settings()
+# settings = get_settings()
 
 
 class ConnectionToCloud():
-    def __init__(self, bucket):
+    def __init__(self, bucket, aws_access_key_id, aws_secret_access_key):
         self.bucket = bucket
         self.s3 = boto3.client(
             's3',
-            aws_access_key_id=settings.aws_access_key_id,
-            aws_secret_access_key=settings.aws_secret_access_key,
+            aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key,
             region_name='ru-central1',
             endpoint_url='https://storage.yandexcloud.net'
         )

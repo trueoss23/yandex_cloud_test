@@ -1,18 +1,9 @@
-from fastapi import FastAPI, HTTPException, UploadFile
+from fastapi import FastAPI, UploadFile
 import uvicorn
 
-from config import get_settings
-from db import DbTools
-from cloud import ConnectionToCloud
-from my_exeptions import UncorrectForeignKeyExeptions
+from di_container import get_di_container
 
-settings = get_settings()
-cloud = ConnectionToCloud('igor233')
-db = DbTools(settings.db_user,
-             settings.db_password,
-             settings.db_host,
-             settings.db_name)
-
+di = get_di_container
 app = FastAPI()
 
 
@@ -25,16 +16,16 @@ def upload_file(file: UploadFile):
         contents = file.file.read()
         f.write(contents)
         file_name_in_cloud = file.filename
-        cloud.upload_file_and_get_url(file_name, f'source/{file_name_in_cloud}')
+        di.cloud.upload_file_and_get_url(file_name, f'source/{file_name_in_cloud}')
         if file.content_type == 'image/jpeg' or file.content_type == 'image/png':
-            cloud.crete_avatars(file_name, file_name_in_cloud)
+            di.cloud.crete_avatars(file_name, file_name_in_cloud)
     return {'File uploaded'}
 
 
 @app.get('/')
 def get_test():
     try:
-        res = cloud.upload_file_and_get_url('ar.jpg', 'source/test1.jpg')
+        res = di.cloud.upload_file_and_get_url('ar.jpg', 'source/test1.jpg')
         return {res}
     except FileNotFoundError as e:
         return {'Not Found file'}
