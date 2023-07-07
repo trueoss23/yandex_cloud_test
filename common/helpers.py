@@ -1,5 +1,5 @@
 import requests
-from PIL import Image #read the image im = Image.open("sample-image.png") #image size print(im.size)
+from PIL import Image
 
 
 def get_character_after_last_slash(string):
@@ -21,11 +21,13 @@ def download_file_from_yandex_cloud(url, api_key):
         print("Error download file")
 
 
-def resize_image(file_name_image: str, width: int, height: int, format: str) -> bool:
-    name = file_name_image.split('.')
+def create_new_file_witn_new_size(image_name: str,
+                                  width: int, height: int,
+                                  format: str) -> str | None:
+    name = image_name.split('.')
     prefix = name[0]
     try:
-        im = Image.open(file_name_image)
+        im = Image.open(image_name)
     except FileNotFoundError as e:
         return None
     size = (width, height)
@@ -33,7 +35,3 @@ def resize_image(file_name_image: str, width: int, height: int, format: str) -> 
     new_name = f'{prefix}_{width}_{height}.{format}'
     out.save(new_name)
     return new_name
-
-
-def create_avatar(file_name: str):
-    pass

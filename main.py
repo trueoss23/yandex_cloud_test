@@ -1,9 +1,9 @@
 from fastapi import FastAPI, UploadFile
 import uvicorn
 
-from di_container import get_di_container
+from common.di_container import get_di_container
 
-di = get_di_container
+di = get_di_container()
 app = FastAPI()
 
 
@@ -15,26 +15,19 @@ def upload_file(file: UploadFile):
     with open(file_name, "wb") as f:
         contents = file.file.read()
         f.write(contents)
-        file_name_in_cloud = file.filename
-        di.cloud.upload_file_and_get_url(file_name, f'source/{file_name_in_cloud}')
-        if file.content_type == 'image/jpeg' or file.content_type == 'image/png':
-            di.cloud.crete_avatars(file_name, file_name_in_cloud)
-    return {'File uploaded'}
+        result = di.controller_upload_file(file_name, file.content_type)
+    di.delete_local_files(file_name)
+    return result
+
+
+@app.get('/delete')
+def delete_from_cloud(file_name_without_dot_and_path):
+    di.cloud.delete_objects('cat.jpg')
 
 
 @app.get('/')
 def get_test():
-    try:
-        res = di.cloud.upload_file_and_get_url('ar.jpg', 'source/test1.jpg')
-        return {res}
-    except FileNotFoundError as e:
-        return {'Not Found file'}
-    # res = db.add_row_to_files_table('jpg', 'aflajfjweekf')
-    # try:
-    #     res = db.add_row_to_avatars_table(8, 100)
-    # except UncorrectForeignKeyExeptions as e:
-    #     return {'Uncorrect Foreign key'}
-    # return {'id': res}
+    return {'Hello'}
 
 
 if __name__ == '__main__':
