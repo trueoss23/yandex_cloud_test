@@ -73,11 +73,10 @@ class DbTools():
         except IntegrityError:
             raise UncorrectForeignKeyExeptions()
         return result
-    
+
     def delete_on_file_name(self, file_name_without_without_extension: str):
         with Session(self.engine) as session:
             session.query(TableAvatars).filter(TableAvatars.url.like(f'%{file_name_without_without_extension}%')).delete(synchronize_session='fetch')
             session.commit()
             session.query(TableFiles).filter(TableFiles.url.like(f'%{file_name_without_without_extension}%')).delete(synchronize_session='fetch')
             session.commit()
-

@@ -22,7 +22,7 @@ def upload_file(file: UploadFile):
 
 @app.get('/delete')
 def delete_from_cloud(file_name_without_dot_and_path):
-    # di.cloud.delete_objects('cat.jpg')
+    di.cloud.delete_objects('cat.jpg')
     di.db.delete_on_file_name('cat')
 
 
